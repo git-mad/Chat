@@ -82,28 +82,5 @@ public class MainActivity extends AppCompatActivity {
                         rvMessages.smoothScrollToPosition(messages.size());
                     }
                 });
-
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnSend.setEnabled(false);
-
-                String content = etMessage.getText().toString();
-
-                currMessage = new Message(UUID.randomUUID().toString(), content, userId.substring(0, 3), System.currentTimeMillis());
-
-                FirebaseFirestore.getInstance()
-                        .collection("messages")
-                        .document(currMessage.getId())
-                        .set(currMessage)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                etMessage.setText("");
-                                btnSend.setEnabled(true);
-                            }
-                        });
-            }
-        });
     }
 }
