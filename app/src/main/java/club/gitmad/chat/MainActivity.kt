@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity() {
                         return@EventListener
                     }
 
-                    for (doc in queryDocumentSnapshots!!) {
-                        val newMessage = doc.toObject<Message>(Message::class.java)
+                    queryDocumentSnapshots?.forEach {
+                        val newMessage = it.toObject<Message>(Message::class.java)
                         if (!messages.contains(newMessage)) {
                             messages.add(newMessage)
                         }
