@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private var messages: MutableList<Message> = mutableListOf()
 
-    private var currMessage: Message? = null
+    private var currMessage: Message = Message()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,37 +49,37 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     for (doc in queryDocumentSnapshots!!) {
-                        val newMessage = doc.toObject<Message>(Message::class.java!!)
-                        if (!messages!!.contains(newMessage)) {
-                            messages!!.add(newMessage)
+                        val newMessage = doc.toObject<Message>(Message::class.java)
+                        if (!messages.contains(newMessage)) {
+                            messages.add(newMessage)
                         }
                     }
 
-                    Collections.sort(messages!!) { o1, o2 -> java.lang.Long.compare(o1.time, o2.time) }
+                    messages.sortWith(Comparator { o1, o2 -> o1.time.compareTo(o2.time) })
 
-                    messageAdapter!!.notifyDataSetChanged()
-                    rvMessages!!.smoothScrollToPosition(messages!!.size)
+                    messageAdapter.notifyDataSetChanged()
+                    rvMessages.smoothScrollToPosition(messages.size)
                 })
 
-        btnSend!!.setOnClickListener {
-            btnSend!!.isEnabled = false
+        btnSend.setOnClickListener {
+            btnSend.isEnabled = false
 
-            val content = etMessage!!.text.toString()
+            val content = etMessage.text.toString()
 
             currMessage = Message(UUID.randomUUID().toString(), content, userId.substring(0, 3), System.currentTimeMillis())
 
             FirebaseFirestore.getInstance()
                     .collection("messages")
-                    .document(currMessage!!.id)
-                    .set(currMessage!!)
+                    .document(currMessage.id)
+                    .set(currMessage)
                     .addOnSuccessListener {
-                        etMessage!!.setText("")
-                        btnSend!!.isEnabled = true
+                        etMessage.setText("")
+                        btnSend.isEnabled = true
                     }
         }
     }
 
     companion object {
-        private val userId = UUID.randomUUID().toString()
+        val userId = UUID.randomUUID().toString()
     }
 }
