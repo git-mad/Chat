@@ -62,20 +62,18 @@ class MainActivity : AppCompatActivity() {
                 })
 
         btnSend.setOnClickListener {
-            btnSend.isEnabled = false
+            // TODO 1. Optionally disable btnSend (This makes sure users can't send a message without their current one being sent)
+            // HINT: Look up "how to disable button in Android"
+            // HINT: isEnabled
 
-            val content = etMessage.text.toString()
+            // TODO 2. Get the text of etMessage
 
-            currMessage = Message(UUID.randomUUID().toString(), content, userId.substring(0, 3), System.currentTimeMillis())
+            // TODO 3. Create a Message object
+            // 3a. For ID, you can use UUID.randomUUID().toString() to generate a random ID
+            // 3b. For current time, you can use System.currentTimeMillis()
 
-            FirebaseFirestore.getInstance()
-                    .collection("messages")
-                    .document(currMessage.id)
-                    .set(currMessage)
-                    .addOnSuccessListener {
-                        etMessage.setText("")
-                        btnSend.isEnabled = true
-                    }
+            // TODO 4. Write to the FirebaseFirestore collection called "messages"
+            // 4a. Make sure the document path is the ID of your Message object
         }
     }
 
