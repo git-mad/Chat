@@ -55,18 +55,35 @@ class MainActivity : AppCompatActivity() {
 
         btnSend.setOnClickListener {
             // TODO 1. Get the text of etMessage
+            val text = etMessage.text.toString()
 
             // TODO 2. Create a Message object
-            val message = Message(userId, userName)
+            // You only need to set the message!
+            val message = Message(message = text, userName = userName)
 
             // TODO 3. Write to the FirebaseFirestore collection called "messages"
             // https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document
+            Firebase.firestore.collection("messages").add(message)
         }
     }
 
     private fun signIn() {
         // TODO: If user is logged in, set the userId and userName. Else, log in.
         // https://firebase.google.com/docs/auth/android/firebaseui#kotlin+ktx
+        Firebase.auth.currentUser?.let {
+            userId = it.uid
+            userName = it.displayName ?: ""
+        } ?: run {
+            val providers = arrayListOf(
+                    AuthUI.IdpConfig.EmailBuilder().build(),
+                    AuthUI.IdpConfig.GoogleBuilder().build(),
+            )
+            startActivityForResult(AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(providers)
+                    .build(),
+                    RC_SIGN_IN)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -76,6 +93,8 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 // TODO: Get the userId and userName and save them to the fields
                 // https://firebase.google.com/docs/auth/android/firebaseui#kotlin+ktx_1
+                userId = Firebase.auth.currentUser!!.uid
+                userName = Firebase.auth.currentUser!!.displayName ?: ""
             }
         }
     }
