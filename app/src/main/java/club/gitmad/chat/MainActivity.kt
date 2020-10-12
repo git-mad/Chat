@@ -1,32 +1,25 @@
 package club.gitmad.chat
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.DocumentReference
+import androidx.appcompat.app.AppCompatActivity
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-
-import java.lang.reflect.Array
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
-import java.util.HashSet
-import java.util.UUID
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val RC_SIGN_IN = 123
+
+    private var userId = ""
+    private var userName = ""
 
     private lateinit var messageAdapter: MessageAdapter
     private var messages: MutableList<Message> = mutableListOf()
@@ -35,10 +28,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        signIn()
+
         messageAdapter = MessageAdapter(messages)
         rvMessages.adapter = messageAdapter
 
-        FirebaseFirestore.getInstance().collection("messages")
+        Firebase.firestore.collection("messages")
                 .addSnapshotListener(EventListener { queryDocumentSnapshots, e ->
                     if (e != null) {
                         Log.e("MainActivity", "Firebase Cloud Firestore - Initial listener", e)
@@ -46,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     queryDocumentSnapshots?.forEach {
-                        val newMessage = it.toObject(Message::class.java)
+                        val newMessage = it.toObject<Message>()
                         if (!messages.contains(newMessage)) {
                             messages.add(newMessage)
                         }
@@ -62,14 +57,26 @@ class MainActivity : AppCompatActivity() {
             // TODO 1. Get the text of etMessage
 
             // TODO 2. Create a Message object
-            // You only need to set the message!
+            val message = Message(userId, userName)
 
             // TODO 3. Write to the FirebaseFirestore collection called "messages"
             // https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document
         }
     }
 
-    companion object {
-        val userId = UUID.randomUUID().toString()
+    private fun signIn() {
+        // TODO: If user is logged in, set the userId and userName. Else, log in.
+        // https://firebase.google.com/docs/auth/android/firebaseui#kotlin+ktx
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == Activity.RESULT_OK) {
+                // TODO: Get the userId and userName and save them to the fields
+                // https://firebase.google.com/docs/auth/android/firebaseui#kotlin+ktx_1
+            }
+        }
     }
 }

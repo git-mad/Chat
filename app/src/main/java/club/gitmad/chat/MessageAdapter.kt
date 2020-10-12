@@ -12,7 +12,7 @@ class MessageAdapter(private val messages: MutableList<Message>) : RecyclerView.
     class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bindMessage(message: Message) {
             containerView.tvMessage.text = message.message
-            containerView.tvSender.text = message.sender
+            containerView.tvSender.text = message.userName
         }
     }
 
