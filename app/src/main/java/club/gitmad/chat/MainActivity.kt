@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private var messages: MutableList<Message> = mutableListOf()
 
-    private var currMessage: Message = Message()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
