@@ -16,9 +16,8 @@ class MessageAdapter(private val messages: MutableList<Message>) : RecyclerView.
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_message, parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_message, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindMessage(messages[position])
