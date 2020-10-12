@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         messageAdapter = MessageAdapter(messages)
-        rvMessages.layoutManager = LinearLayoutManager(this)
         rvMessages.adapter = messageAdapter
 
         FirebaseFirestore.getInstance().collection("messages")
@@ -49,13 +48,13 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     queryDocumentSnapshots?.forEach {
-                        val newMessage = it.toObject<Message>(Message::class.java)
+                        val newMessage = it.toObject(Message::class.java)
                         if (!messages.contains(newMessage)) {
                             messages.add(newMessage)
                         }
                     }
 
-                    messages.sortWith(Comparator { o1, o2 -> o1.time.compareTo(o2.time) })
+                    messages.sortWith { o1, o2 -> o1.time.compareTo(o2.time) }
 
                     messageAdapter.notifyDataSetChanged()
                     rvMessages.smoothScrollToPosition(messages.size)
